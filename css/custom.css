@@ -1,0 +1,110 @@
+@charset "UTF-8";
+/* CSS Document */
+
+.navbar {
+    margin-bottom: 0;
+    background-color: #fff;
+    z-index: 9999;
+    border: 0;
+    font-size: 12px !important;
+    line-height: 1.42857143 !important;
+    letter-spacing: 4px;
+	border-bottom: thick solid #5bc0de;
+}
+
+.navbar li a, .navbar .navbar-brand {
+    color: #5bc0de !important;
+}
+
+.navbar-nav li a:hover, .navbar-nav li.active a {
+    color: #fff !important;
+    background-color: #5bc0de !important;
+}
+
+.navbar-default .navbar-toggle {
+    border-color: transparent;
+    color: #5bc0de !important;
+}
+
+
+h1 {
+	padding: 30px;
+}
+h2,h3,h4 {
+	color: #5bc0de;
+}
+body {
+    font: 400 15px Lato, sans-serif;
+    line-height: 1.8;
+    color: #818181;
+}
+label {
+	color: #5bc0de;
+}
+
+.jumbotron {
+	font-family: Montserrat, sans-serif;
+	background-color: #5bc0de;
+	line-height: 3;
+	padding: 50px 0px;
+	color: #ffffff;
+	margin-bottom: 0px !important;
+}
+.container-fluid {
+    padding: 30px 50px;
+	line-height: 2;
+}
+.row {
+	padding: 3px;
+}
+.bg-grey {
+    background-color: #f8f8f8;
+}
+
+
+
+.material-switch > input[type="checkbox"] {
+    display: none;   
+}
+
+.material-switch > label {
+    cursor: pointer;
+    height: 0px;
+    position: relative; 
+    width: 40px;  
+	margin-right: 10px;
+}
+
+.material-switch > label::before {
+    background: rgb(0, 0, 0);
+    box-shadow: inset 0px 0px 10px rgba(0, 0, 0, 0.5);
+    border-radius: 8px;
+    content: '';
+    height: 16px;
+    margin-top: -8px;
+    position:absolute;
+    opacity: 0.3;
+    transition: all 0.4s ease-in-out;
+    width: 40px;
+}
+.material-switch > label::after {
+    background: rgb(255, 255, 255);
+    border-radius: 16px;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
+    content: '';
+    height: 24px;
+    left: -4px;
+    margin-top: -8px;
+    position: absolute;
+    top: -4px;
+    transition: all 0.3s ease-in-out;
+    width: 24px;
+}
+.material-switch > input[type="checkbox"]:checked + label::before {
+    background: inherit;
+    opacity: 0.5;
+}
+.material-switch > input[type="checkbox"]:checked + label::after {
+    background: inherit;
+    left: 20px;
+}

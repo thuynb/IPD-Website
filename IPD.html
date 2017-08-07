@@ -1,0 +1,325 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<script src="./js/jquery-3.1.1.js"></script>
+<script src="./js/IPD.js"></script>
+<script src="./js/Export.js"></script>
+<script src="./js/AddNew.js"></script>
+<script src="./js/FormValidation.js"></script>
+<script src="./js/DrawChart.js"></script>
+
+<script src="./js/Chart.min.js"></script>
+<script src="./Strategy/Grim.js"></script>
+<script src="./Strategy/Random.js"></script>
+<script src="./Strategy/Pavlov.js"></script>
+<script src="./Strategy/Always Defect.js"></script>
+<script src="./Strategy/Always Cooperate.js"></script>
+<script src="./Strategy/Tit For Two Tat.js"></script>
+<script src="./Strategy/Tit For Tat.js"></script>
+<script src="./Strategy/Firm But Fair.js"></script>
+<script src="./Strategy/Generous Tit For Tat.js"></script>
+<script src="./Strategy/ZD-Extortion-2.js"></script>
+<script src="./Strategy/ZD-GTFT-2.js"></script>
+
+<script>
+$(document).ready(function(){
+  // Add smooth scrolling to all links in navbar + footer link
+  $(".navbar a, footer a[href='#myPage']").on('click', function(event) {
+
+   // Make sure this.hash has a value before overriding default behavior
+  if (this.hash !== "") {
+
+    // Prevent default anchor click behavior
+    event.preventDefault();
+
+    // Store hash
+    var hash = this.hash;
+
+    // Using jQuery's animate() method to add smooth page scroll
+    // The optional number (900) specifies the number of milliseconds it takes to scroll to the specified area
+    $('html, body').animate({
+      scrollTop: $(hash).offset().top
+    }, 900, function(){
+
+      // Add hash (#) to URL when done scrolling (default click behavior)
+      window.location.hash = hash;
+      });
+    } // End if
+  });
+})
+</script>
+
+<link href="./css/bootstrap.min.css" rel="stylesheet">
+<link href="./css/bootstrap-theme.min.css" rel="stylesheet">
+<link href="./css/custom.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet" type="text/css">
+<link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet" type="text/css">
+
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>IPD Simulation</title>
+</head>
+
+<!--Navigation Bar-->
+<body data-spy="scroll" data-target=".navbar" data-offset="60">
+<nav class="navbar navbar-fixed-top">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span> 
+      </button>
+      <a class="navbar-brand" href="#top">TOP</a>
+    </div>
+    <div class="collapse navbar-collapse" id="myNavbar">
+      <ul class="nav navbar-nav navbar-right">
+      <li><a href="#ipdintro">INTRODUCTION</a></li>
+        <li><a href="#simsetting">SIMULATION SETTING</a></li>
+        <li><a href="#strasetting">STRATEGY SETTING</a></li>
+        <li><a href="#myChart">RUN</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!--Introduction Jumbotron-->
+<div class="jumbotron" id="top">
+	<div class="row">
+	<div class="col-md-3"></div>
+    <div class="col-md-6">
+ 	<img src="./Cover.jpg" class="img-responsive" style="display:inline" alt="Iterated Prisoner's Dilemma"></div>
+    <div class="col-md-3"></div>
+    </div>
+    
+
+<div class="text-center"><h1>Iterated Prisoner's Dilemma Simulation</h1></div>
+<div class="row">
+	<div class="col-md-3"></div>
+	<div class="col-md-6">
+    A Javascript-based simulation of the classical Iterated Prisoner's Dilemma game. Featuring:
+    <ul>
+		<li>Popular/Classic IPD Strategies and Custom User Strategies</li>
+        <li>Noisy Environment & Probabilistic Game Length</li>
+        <li>Population Representation by Evolution of Dominant Strategies</li>
+    </ul>
+    </div>
+</div>
+<div class="col-md-3"></div>
+</div>
+ 
+<!--Game Introduction-->
+<div class="container-fluid bg-grey" id="ipdintro">
+<div class="page-header text-center">
+<h2>Iterated Prisoner's Dilemma Introduction</h2>
+</div>
+
+<div>
+<label>Prisoner's Dilemma: </label> Two members of a criminal gang are arrested and imprisoned. Each prisoner is in solitary confinement with no means of communicating with the other. The prosecutors lack sufficient evidence to convict the pair on the principal charge. They hope to get both sentenced to a year in prison on a lesser charge. Simultaneously, the prosecutors offer each prisoner a bargain. Each prisoner is given the opportunity either to: betray the other by testifying that the other committed the crime, or to cooperate with the other by remaining silent. The offer is:
+<ul>
+<li>If A and B each betray the other, each of them receives the <label>Punishment Payoff P</label>, serving 2 years in prison.</li>
+<li>If A betrays B but B remains silent, A receives the <label>Temptation Payoff T</label>, is set free and B receives the <label>"Sucker's" Payoff S</label>, serving 3 years in prison (and vice versa).</li>
+<li>If A and B both remain silent, each of them receives <label>Cooperation Reward R</label>, serving only 1 year in prison.</li>
+</ul>
+If two players play prisoner's dilemma more than once in succession and they remember previous actions of their opponent and change their strategy accordingly, the game is called <label>Iterated Prisoner's Dilemma</label>. The iterated prisoner's dilemma game is fundamental to some theories of human cooperation and trust. On the assumption that the game can model transactions between two people requiring trust, cooperative behaviour in populations may be modeled by a multi-player, iterated, version of the game.
+Unlike the standard prisoner's dilemma, in the iterated prisoner's dilemma the defection strategy is counter-intuitive and fails badly to predict the behavior of human players. Within standard economic theory, though, this is the only correct answer.
+</div>
+</div>
+    
+<!--Game Setting-->
+<form action="" method="post" enctype="multipart/form-data" name="form1" id="form1">
+<div class="container-fluid" id="simsetting">
+<div class="page-header text-center">
+ <h2>Simulation Setting</h2>
+</div>
+
+<h3>Preset: </h3>
+<div class="row">
+	    <div class="col-md-12 btn-group text-center container-fluid" data-toggle="buttons">
+    	<label class="btn btn-info active">
+    	<input type="radio" name="preset" id="preset0" value="preset0" checked="checked" onchange="changepreset()"/>Repeated Tournaments (No Evolution)</label>
+        <label class="btn btn-info">
+    	<input type="radio" name="preset" id="preset1" value="preset1" checked="checked" onchange="changepreset()"/>Evolution of Dominance (Default Setting)</label>
+   		<label class="btn btn-info">
+        <input type="radio" name="preset" id="preset2" value="preset2" checked="checked" onchange="changepreset()"/>Evolution of Dominance with Noise</label>
+        <label class="btn btn-info">
+        <input type="radio" name="preset" id="preset3" value="preset3" checked="checked" onchange="changepreset()"/>Moran Process</label>
+        <label class="btn btn-info">
+        <input type="radio" name="preset" id="preset4" value="preset4" checked="checked" onchange="changepreset()"/>User Customization</label>
+    	</div>
+</div>
+
+
+<h3>Customization: </h3>
+<div class="row">
+	<div class="col-md-2"><label for="noise">Game Noise (0-100%):</label></div>
+    <div class="col-md-2"><input type="text" name="noise" id="noise" class="form-control" value="0" readonly="readonly"/></div>
+    <div class="col-md-8"><span class="help-block">The probability of a move being misexecuted.</span></div>
+</div>
+
+<div class="row">
+    <div class="col-md-2"><label for="iterations">Iteration:</label></div>
+    <div class="col-md-2"><input type="text" name="iterations" id="iterations" class="form-control" value="200" readonly="readonly"/> </div>
+	<div class="col-md-8"><span class="help-block">Number of turns per game.</span></div>
+</div>
+
+<div class="row">
+	<div class="col-md-2">
+	  <label for="deviation">Iteration Deviation:</label></div>
+    <div class="col-md-2"><input type="text" name="deviation" id="deviation" class="form-control" value="10" readonly="readonly"/> </div>
+    <div class="col-md-8"><span class="help-block">The deviation of number of turns per game. Suggested: 10% </span></div>
+</div>
+
+<div class="row">
+	<div class="col-md-2"><label for="generations">Generation: </label></div>
+    <div class="col-md-2"><input type="text" name="generations" id="generations" class="form-control" value="10" readonly="readonly"/></div>
+    <div class="col-md-8"><span class="help-block">The number of repeated tournament.</span></div>
+</div>    
+    
+<div class="row">
+    <div class="col-md-2"><label for="agents">Agents per Strategies:</label></div>
+    <div class="col-md-2"><input type="text" name="agents" id="agents" class="form-control" value="10" readonly="readonly" onchange="changeagent()" onkeyup="this.onchange()" onpaste="this.onchange"/></div>
+    <div class="col-md-8"><span class="help-block">The default starting number of agents for each chosen strategy.</span></div>
+</div>
+
+<div class="row">
+	<div class="col-md-2"><label for="mode">Evolution Environment:</label></div>
+    <div class="col-md-8 btn-group" data-toggle="buttons">
+    	<label class="btn btn-info active" id="lmode0">
+    	<input type="radio" name="mode" id="mode0" value="mode0" checked="checked" onchange="changeratio()"/>No Evolution</label>
+        <label class="btn btn-info" id="lmode1">
+    	<input type="radio" name="mode" id="mode1" value="mode1" onchange="changeratio()"/>Random Evolution</label>
+   		<label class="btn btn-info" id="lmode2">
+        <input type="radio" name="mode" id="mode2" value="mode2" onchange="changeratio()"/>Evolution of Dominance</label>
+    </div>
+</div>
+
+<div class="row">
+	<div class="col-md-2"><label for="ratio">Reproduction Ratio:</label></div>
+ 	<div class="col-md-2"><input type="text" name="ratio" id="ratio" class="form-control" readonly="readonly"/></div>
+    <div class="col-md-8"><span class="help-block">The probability of being reproducted of each agent after a generation.</span></div>
+</div>
+
+<div class="row">
+	<div class="col-md-2"><label for="mode">Chart Type:</label></div>
+    <div class="col-md-8 btn-group" data-toggle="buttons">
+    	<label class="btn btn-info active">
+    		<input type="radio" name="chart" id="chart1" value="chart1" checked/>Number of Agents Chart
+  		</label>
+  		<label class="btn btn-info">
+    		<input type="radio" name="chart" id="chart2" value="chart2" />Score Chart
+  		</label>
+    </div>
+</div>
+</div>
+
+<div class="container-fluid bg-grey" id="strasetting">
+<div class="page-header text-center">
+ <h2>Strategy Setting</h2>
+</div>
+<!--
+<ul class="nav nav-tabs nav-justified">
+	<li class="active"><a data-toggle="tab" href="#strategyList">Default Strategies</a></li>
+    <li><a data-toggle="tab" href="#customStrategy">Add Custom Strategies</a></li>
+</ul>-->
+
+<div class="tab-content">
+<div class="tab-pane fade in active" id="strategyList">
+<div class="col-md-12 pre-scrollable" id="strategies">
+	<div class="row">
+        <div class="col-md-1"><input type="text" name="check" id="check0" class="form-control" value="10" /></div>        
+        <label>Tit For Tat:</label> Cooperates on the first move, then copies the opponent’s last move.
+	</div>
+ 
+	<div class="row">
+        <div class="col-md-1"><input type="text" name="check" id="check1" class="form-control" value="10" /></div>
+        <label>Pavlov (Win-Stay/Lose-Shift):</label> Cooperates on the first move. If a reward or temptation payoff is received in the last round then repeats last choice, otherwise chooses the opposite choice. 
+	</div>
+            
+	<div class="row">
+        <div class="col-md-1"><input type="text" name="check" id="check2" class="form-control" value="10" /></div>
+        <label>Generous Tit For Tat:</label> Same as TFT, except that it cooperates with a probability when the opponent defects.
+    </div>
+        
+    <div class="row">
+        <div class="col-md-1"><input type="text" name="check" id="check3" class="form-control" value="10" /></div>
+        <label>Firm But Fair:</label> Cooperates on the first move, and cooperates except after receiving a sucker payoff.
+    </div>
+        
+    <div class="row">
+        <div class="col-md-1"><input type="text" name="check" id="check4" class="form-control" value="10" /></div>
+        <label>Always Cooperate: </label> Cooperates on every move.
+    </div>
+        
+    <div class="row">
+        <div class="col-md-1"><input type="text" name="check" id="check5" class="form-control" value="10" /></div>
+        <label>Always Defect: </label> Defects on every move.
+    </div>
+        
+	<div class="row">
+        <div class="col-md-1"><input type="text" name="check" id="check6" class="form-control" value="10" /></div>
+        <label>Random: </label> Makes a random move.
+	</div>
+    
+    <div class="row">
+        <div class="col-md-1"><input type="text" name="check" id="check7" class="form-control" value="10" /></div>
+        <label>Tit For Two Tat: </label> Cooperates on the first move, and defects only when the opponent defects two times.
+    </div>
+        
+    <div class="row">
+        <div class="col-md-1"><input type="text" name="check" id="check8" class="form-control" value="10" /></div>
+        <label>Grim/Spite :</label> Cooperates, until the opponent defects, and thereafter always defects.
+    </div>
+    
+    <div class="row">
+        <div class="col-md-1"><input type="text" name="check" id="check9" class="form-control" value="10" /></div>
+        <label>ZD-Extortion-2: </label> Zero-Determinant extortionate strategy with a factor of 2.
+    </div>
+    
+    <div class="row">
+        <div class="col-md-1"><input type="text" name="check" id="check10" class="form-control" value="10" /></div>
+        <label>ZD-GTFT-2: </label> Zero-Determinant Generous Tit For Tat strategy with a factor of 2.
+       </div>
+    </div>
+</div>
+
+
+<!--Custom Strategy
+<div class="tab-pane fade" id="customStrategy">
+<div class="container-fluid">
+        <div><h3>Add by Text: </h3></div>
+        	<div class="row">
+        		<div class="col-md-2">Name: </div>
+				<div class="col-md-2"><input type="text" name="customName" id="customName" class="form-control"/></div>
+                <div class="col-md-2">Description: </div>
+				<div class="col-md-6"><input type="text" name="customDesc" id="customDesc" class="form-control"/></div>
+            </div>
+           	<div class="row">
+            	<div class="col-md-2">Function:</div>
+				<div class="col-md-10">
+        	 		<textarea name="customCode" id="customCode" class="form-control" rows="5">return 0;</textarea></div>
+            </div>
+            
+            <div class="row text-center">
+            <input type="button" name="customText" id="customText" value="Add Custom Strategy By Text" onclick="addCustom(0)" class="btn btn-info"/>
+            </div>
+       <div><h3>Add by File: </h3></div>
+       		<div class="row"><input type="file" name="customFile" id="customFile" accept=".txt" multiple="multiple"/></div>
+            <div class="row text-center"><input type="button" name="customText" id="customText" value="Add Custom Strategy By File" class="btn btn-info" onclick="addCustom(1)"/></div>	
+   </div>
+</div>-->
+</div>
+</div>
+
+<div class="col-md-12 text-center container-fluid">
+    <input type="button" name="start" id="start" value="Start Simulation" onclick="main()" class="btn btn-info btn-block btn-lg"/>
+	<input type="button" name="export" id="button" value="Export Simulation" onclick ="exportSimulation()" class="btn btn-info btn-block btn-lg"/>
+</div>
+</form>
+<canvas id="myChart" width=100% height="30%"></canvas>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+</body>
+</html>
