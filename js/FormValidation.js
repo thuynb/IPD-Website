@@ -18,6 +18,7 @@ function changepreset() {
 	var pDeviation = document.getElementById("deviation");
 	var pGeneration = document.getElementById("generations");
 	var pAgent = document.getElementById("agents");
+	var pDelay = document.getElementById("delay");
 	
 	if (document.getElementById("preset0").checked == true)  {
 		pNoise.readOnly = true;
@@ -30,6 +31,8 @@ function changepreset() {
 		pGeneration.value = 10;
 		pAgent.readOnly = true;
 		pAgent.value = 10;
+		pDelay.readOnly = true;
+		pDelay.value = 0;
 		document.getElementById("mode1").checked = false;
 		document.getElementById("mode2").checked = false;
 		document.getElementById("mode0").checked = true;
@@ -49,6 +52,8 @@ function changepreset() {
 		pGeneration.value = 10;
 		pAgent.readOnly = true;
 		pAgent.value = 10;
+		pDelay.readOnly = true;
+		pDelay.value = 0;
 		document.getElementById("mode0").checked = false;
 		document.getElementById("mode1").checked = false;
 		document.getElementById("mode2").checked = true;
@@ -68,6 +73,8 @@ function changepreset() {
 		pGeneration.value = 10;
 		pAgent.readOnly = true;
 		pAgent.value = 10;
+		pDelay.readOnly = true;
+		pDelay.value = 0;
 		document.getElementById("mode0").checked = false;
 		document.getElementById("mode1").checked = false;
 		document.getElementById("mode2").checked = true;
@@ -87,6 +94,8 @@ function changepreset() {
 		pGeneration.value = 10;
 		pAgent.readOnly = true;
 		pAgent.value = 1;
+		pDelay.readOnly = true;
+		pDelay.value = 0;
 		document.getElementById("mode0").checked = false;
 		document.getElementById("mode1").checked = false;
 		document.getElementById("mode2").checked = true;
@@ -102,6 +111,7 @@ function changepreset() {
 		pDeviation.readOnly = false;
 		pGeneration.readOnly = false;
 		pAgent.readOnly = false;
+		pDelay.readOnly = false;
 	}
 	changeratio();
 	changeagent();

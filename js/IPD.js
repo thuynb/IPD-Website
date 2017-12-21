@@ -5,11 +5,13 @@ var iterations;
 var deviation;
 var generations;
 var totalWeight;
+var delay;
 var ratio;
 var initAgent;
 var listALG = [];
 var availableALG = [];
 var sum = [];
+var matchSum = [];
 var weight = [];
 var exportData = [];
 var exportHeadData;
@@ -33,6 +35,9 @@ Strategy.prototype.play = function(x1,x2) {
 }
 Strategy.name = "Abstract Strategy";
 
+
+
+
 document.addEventListener('DOMContentLoaded', function() {
    availableALG = [new TFT(), new Pavlov(), new GTFT(), new FBF(), new AIIC(), new AIID(),  new Random(), new TFTT(), new Grim(), new ZDExtortion2(), new ZDGTFT2()];
 }, false);
@@ -50,7 +55,7 @@ function main() {
 }
 
 function round(i) {
-	return Math.round(i * 100) / 100;
+	return Math.round(i * 100000) / 100000;
 }
 
 function init() {   
@@ -59,7 +64,7 @@ function init() {
 	exportGeneration = [];
 	listALG = []; weight = [];	data = { labels: [], datasets: [] }; 
 	totalWeight = 0;
-	exportHeadData = ["Noise: ",noise, "Iteration: ",iterations,"Generations: ",generations,"Agents per Strategy: ",initAgent];
+	exportHeadData = ["Noise: ",noise,"Generations: ",generations,"Agents per Strategy: ",initAgent];
 	exportData[exportData.length] = exportHeadData;
 }
 
@@ -69,12 +74,13 @@ function readDataHTML() {
 	generations = document.form1.generations.value;
 	deviation = document.form1.deviation.value;
 	ratio = document.form1.ratio.value;
+	delay = document.form1.delay.value;
 	
 	var algList = document.getElementsByName("check");
 	for (var i=0;i<MAXALG;i++) 
 		if (algList[i].value != 0) {
-		console.log(algList[i]);
 			sum[sum.length] = 0;
+			matchSum[matchSum.length] = 0;
 			listALG[listALG.length] = availableALG[i];
 			weight[weight.length] = parseInt(algList[i].value)
 			totalWeight += parseInt(algList[i].value);
@@ -90,15 +96,14 @@ function simulation() {
 	
 	for (var i=0;i<generations;i++) {
 		for (var j=0;j<listALG.length;j++) sum[j]=0;
-		
-		var exportG = ["Generation " + (i+1)];
+		for (var j=0;j<listALG.length;j++) matchSum[j]=0;
+					
+		var exportG = ["Generation " + (i+1) + generation()];
 		exportData[exportData.length] = exportG;
 		var exportAlias = [];
 		exportAlias[0] = " / ";
 		for (var j=0;j<listALG.length;j++) exportAlias[j+1] = listALG[j].alias();
 		exportData[exportData.length] = exportAlias;
-		
-		generation();
 		
 		totalSum = 0;
 		for (var j=0;j<listALG.length;j++) totalSum += sum[j];
@@ -160,8 +165,9 @@ function generation() {
 	var result = [];
 	var tmp = [];
 	var exportGen = [];
+	var deviated_iter = parseInt(iterations) + Math.round(deviation * iterations * (Math.random()*2 - 1) / 100);
 	for (var i=0;i<listALG.length;i++) {
-		
+	  
 		var exportGame = new Array(listALG.length);
 		exportGame[0] = listALG[i].alias();
 		for (var j=i;j<listALG.length;j++) 
@@ -170,7 +176,7 @@ function generation() {
 			for (var i1=0;i1<weight[i];i1++) {
 				if (i!=j) {
 					for (var j1=0;j1<weight[j];j1++) {
-						tmp = game(i,j);
+						tmp = game(i,j,deviated_iter);
 						result[1] += tmp[1];
 						result[2] += tmp[2];
 						exportGen[exportGen.length] = [listALG[i].alias() + " (" + i1 + ")",listALG[j].alias() + " (" + j1 + ")",tmp[1],tmp[2],tmp[3],tmp[4]];
@@ -178,33 +184,40 @@ function generation() {
 				}
 				else {
 					for (var j1=i1+1;j1<weight[i];j1++) {
-						tmp = game(i,j);
+						tmp = game(i,j,deviated_iter);
 						result[1] += tmp[1];
 						result[2] += tmp[2];
 						exportGen[exportGen.length] = [listALG[i].alias() + " (" + i1 + ")",listALG[j].alias() + " (" + j1 + ")",tmp[1],tmp[2],tmp[3],tmp[4]];
 					}
 				}
 			}
-			sum[i] += parseInt(result[1]);
-			sum[j] += parseInt(result[2]);
 			var noOfMatches = i!=j ? weight[i]*weight[j] : weight[i]*(weight[i]-1) / 2;
-			exportGame[j+1] = round(result[1]) + " / " + round(result[2]) + " (" + noOfMatches + " Games)";
+			if (noOfMatches) {
+				sum[i] += parseInt(result[1]) / deviated_iter;
+				sum[j] += parseInt(result[2]) / deviated_iter;
+				matchSum[i] += noOfMatches;
+				matchSum[j] += noOfMatches;
+			}
+			exportGame[j+1] = result[1] + " / " + result[2] + " (" + noOfMatches + " Games)";
 		}
 		exportData[exportData.length] = exportGame;
 	}
 	exportGeneration[exportGeneration.length] = exportGen;
-	for (var i=0;i<listALG.length;i++)
-	if (weight[i]>0) sum[i] /= weight[i];
+	for (var i=0;i<listALG.length;i++) 
+		if (matchSum[i]>0) sum[i] /= matchSum[i];
+ 	return deviated_iter;
 }
 
-function game(x,y) {
+function game(x,y,deviated_iter) {
 	var x1 = "";
 	var x2 = "";
+	var x1delayed = "";
+	var x2delayed = "";
 	var score = [0,0,0,"",""];
 	var choice1, choice2, rad;
-	for (var i=0;i<iterations;i++) {
-		 choice1 = listALG[x].play(x1,x2);
-		 choice2 = listALG[y].play(x2,x1);
+	for (var i=0;i<deviated_iter;i++) {
+		 choice1 = listALG[x].play(x1delayed,x2delayed);
+		 choice2 = listALG[y].play(x2delayed,x1delayed);
 		 
 		 //Noise
 		 rad = Math.floor((Math.random() * 100) + 1);
@@ -223,6 +236,10 @@ function game(x,y) {
 		 //Add to choice;
 		 x1 += choice1.toString();
 		 x2 += choice2.toString();
+		 if (i>=delay) {
+			 x1delayed += x1[i-delay];
+			 x2delayed += x2[i-delay];
+		 }
 	}
 	score[3] = changeToText(x1);
 	score[4] = changeToText(x2);
